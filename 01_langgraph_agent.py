@@ -6,7 +6,7 @@ TODO:
 1. Improve prompt: add guardrails to focus the conversation on the topic
 2. Add cycle to the graph, instead of using "while True" outside of the graph
 3. Add DuckDuckGo search tool to improve the agent's responses, see https://python.langchain.com/docs/integrations/tools/ddg/
-4. Use Google's gemini-2.0-flash-lite instead of OpenAI, see https://aistudio.google.com/apikey and https://python.langchain.com/docs/integrations/chat/google_generative_ai/ 
+4. (optional) Use Google's gemini-2.0-flash-lite instead of OpenAI, see https://aistudio.google.com/apikey and https://python.langchain.com/docs/integrations/chat/google_generative_ai/ 
 """
 
 import os
