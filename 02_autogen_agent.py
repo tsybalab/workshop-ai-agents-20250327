@@ -4,6 +4,7 @@ Implement a system with two AI agents using AutoGen that can have a conversation
 
 TODO:
 1. Make agents stop after solving the problem
+2. Add evaluation of the assistant's solutions
 """
 
 import os

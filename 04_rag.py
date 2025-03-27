@@ -1,10 +1,9 @@
 """
-Assignment 4: Vector Database with ChromaDB (Solution)
+Assignment 4: Vector Database with ChromaDB
 Implement an AI agent that uses ChromaDB as a vector database for storing and retrieving information.
 
 # TODO:
 1. Use PDF or DOCX instead of hardcoded sample_documents
-2. 
 """
 
 import os
