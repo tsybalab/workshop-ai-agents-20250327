@@ -36,6 +36,16 @@ setup-05:
 	echo "✅ Environment .venv-05 (with Playwright) is ready." && \
 	echo "To activate: source .venv-05/bin/activate"
 
+# --- Dev ---
+
+dev:
+	@if [ -z "$$VIRTUAL_ENV" ]; then \
+		echo "❌ Please activate a virtual environment before running 'make dev'"; \
+		exit 1; \
+	fi
+	pip install -r requirements-dev.txt
+	@echo "✅ Development tools installed into $$VIRTUAL_ENV"
+
 # --- Cleanup ---
 
 clean:
@@ -57,5 +67,6 @@ help:
 	@echo "  make setup-04     # Setup environment for Assignment 4"
 	@echo "  make setup-05     # Setup environment for Assignment 5 (includes playwright install)"
 	@echo "  make setup-06     # Setup environment for Assignment 6"
+	@echo "  make dev          # Install development dependencies"
 	@echo "  make clean        # Remove all virtual environments"
 	@echo ""
