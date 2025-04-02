@@ -10,26 +10,92 @@
 
 ## Installation
 
-```bash
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+### Prerequisites
+- Python 3.11.x (tested with 3.11.7)
+- pip (Python package installer)
+- virtualenv
+- make (for Linux/macOS users)
+
+### Setup
+
+#### For Linux/macOS Users
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/workshop-ai-agents-20250327.git
+   cd workshop-ai-agents-20250327
+   ```
+
+2. **Setup environment for an assignment:**
+   ```bash
+   make setup-01  # Replace 01 with the assignment number
+   ```
+
+3. **Activate the environment:**
+   ```bash
+   source .venv-01/bin/activate  # Replace 01 with the assignment number
+   ```
+
+4. **Run the assignment:**
+   Follow the specific instructions provided for each assignment.
+
+5. **Clean environments:**
+   ```bash
+   make clean
+   ```
+
+#### For Windows Users
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/workshop-ai-agents-20250327.git
+   cd workshop-ai-agents-20250327
+   ```
+
+2. **Create and activate a virtual environment:**
+   ```cmd
+   python -m venv .venv-01  # Replace 01 with the assignment number
+   .venv-01\Scripts\activate
+   ```
+
+3. **Install requirements:**
+   ```cmd
+   pip install --upgrade pip
+   pip install -r requirements-01.txt  # Replace 01 with the assignment number
+   ```
+
+4. **Run the assignment:**
+   Follow the specific instructions provided for each assignment.
+
+5. **Clean environments manually:**
+   ```cmd
+   rmdir /s /q .venv-01  # Replace 01 with the assignment number
+   ```
+
+### Optional: Makefile Alternative for Windows
+Consider creating a `make.bat` file with equivalent commands for easier setup on Windows.
+
+```batch
+@echo off
+:: Usage: make.bat setup-01
+if "%1"=="setup-01" (
+    python -m venv .venv-01
+    .venv-01\Scripts\activate
+    pip install --upgrade pip
+    pip install -r requirements-01.txt
+)
+if "%1"=="clean" (
+    rmdir /s /q .venv-*
+)
 ```
 
-For `05_browseruse.py`:
-```bash
-playwright install
-```
-
-## Usage
+## Recommended Workflow (per assignment)
 
 ```bash
+# Create virtual environment for Assignment 1
+python -m venv .venv-01
+source .venv-01/bin/activate
+pip install -r requirements-01.txt
 python 01_langgraph_agent.py
-python 02_crewai_agent.py
-python 03_crewai_crew.py
-python 04_rag.py
-python 05_browseruse.py
-python 06_voice.py
+deactivate
 ```
 
 ## Using AI models:
@@ -71,4 +137,31 @@ GOOGLE_API_KEY = "..." # Obtain from: https://aistudio.google.com/apikey
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", api_key=GOOGLE_API_KEY, temperature=0)
 ```
 
+## Usage
 
+```bash
+python 01_langgraph_agent.py
+python 02_crewai_agent.py
+python 03_crewai_crew.py
+python 04_rag.py
+python 05_browseruse.py
+python 06_voice.py
+```
+
+## Notes on Project Structure
+
+This workshop contains **independent assignments**, each demonstrating a different AI agent framework:
+
+| Assignment | Agent Framework |
+|------------|-----------------|
+| 01 | LangGraph |
+| 02 | AutoGen |
+| 03 | CrewAI |
+| 04 | LangChain + ChromaDB |
+| 05 | Browser-Use Agent |
+| 06 | Vapi Voice Assistant |
+
+⚠ **Important**:  
+Each assignment may have **incompatible dependency versions** due to rapidly evolving AI agent libraries.
+
+To avoid conflicts, it is recommended to use a **separate virtual environment for each assignment**.
