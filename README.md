@@ -89,12 +89,17 @@ if "%1"=="clean" (
 
 ## Recommended Workflow (per assignment)
 
+### Setup
 ```bash
-# Create virtual environment for Assignment 1
-python -m venv .venv-01
+make setup-01  # Create environment for Assignment 1
 source .venv-01/bin/activate
-pip install -r requirements-01.txt
-python 01_langgraph_agent.py
+make dev       # Install development tools (optional)
+```
+
+Running the Assignment
+
+```bash
+python 01_langgraph_agent.py  # Assignment 1
 deactivate
 ```
 
@@ -102,7 +107,7 @@ deactivate
 To install development tools:
 
 ```bash
-make dev  # Recommended
+make dev # Recommended
 ```
 or manually:
 
