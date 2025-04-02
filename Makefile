@@ -4,6 +4,7 @@
 # Compatible: Linux / macOS (for Windows see README for alternative)
 
 .PHONY: setup clean help
+.DEFAULT_GOAL := help
 
 # --- Setup Environments ---
 
