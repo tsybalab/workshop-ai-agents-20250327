@@ -98,6 +98,18 @@ python 01_langgraph_agent.py
 deactivate
 ```
 
+## Development & Testing 
+To install development tools:
+
+```bash
+make dev  # Recommended
+```
+or manually:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 ## Using AI models:
 
 ### OpenAI
