@@ -20,6 +20,9 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
-# Ignore patterns (should match .gitignore and Black's exclude)
-[{.git/**,venv/**,.venv/**,build/**,dist/**,__pycache__/**,.ipynb_checkpoints/**}]
+# Ignore patterns (should match Black's exclude)
+[.venv-*/**.py]
+ignore = true
+
+[{.git,.mypy_cache,env,venv,build,dist,__pycache__,.ipynb_checkpoints}/**.py]
 ignore = true

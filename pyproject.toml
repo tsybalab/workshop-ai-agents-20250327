@@ -7,17 +7,17 @@ include = '\.pyi?$'                 # Python files only
 skip-string-normalization = false   # Use double quotes consistently
 skip-magic-trailing-comma = false   # Keep trailing commas
 exclude = '''
-/(
+(
     \.git
   | \.mypy_cache
-  | \.venv
+  | \.venv-.*
   | env
   | venv
   | build
   | dist
   | __pycache__
-  | .ipynb_checkpoints
-)/
+  | \.ipynb_checkpoints
+)
 '''
 
 # Import sorting configuration
