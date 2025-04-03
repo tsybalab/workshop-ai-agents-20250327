@@ -104,7 +104,7 @@ deactivate
 ```
 
 ## Development & Testing 
-To install development tools:
+To install development tools, which include `pytest`, use:
 
 ```bash
 make dev # Recommended
@@ -113,6 +113,20 @@ or manually:
 
 ```bash
 pip install -r requirements-dev.txt
+```
+
+## Testing
+
+To run tests for the assignments, use `pytest`. Ensure you have installed the development requirements (which include `pytest`) either by running `make dev` or manually with:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run tests with:
+
+```bash
+pytest
 ```
 
 ## Using AI models:
@@ -279,4 +293,3 @@ isort .                       # Sort imports in all Python files
    git commit -m "descriptive message"
    git push
    ```
-
