@@ -23,9 +23,12 @@ exclude = '''
 # Import sorting configuration
 # https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
-profile = "google"                  # Use Google import style
+profile = "black"                  # Use Black-compatible style
 line_length = 88                    # Match Black's line length
 force_single_line = false           # Allow multiple imports on one line
 multi_line_output = 3              # Vertical Hanging Indent
 include_trailing_comma = true       # Include trailing comma in multi-line imports
 force_grid_wrap = 0                 # Don't force grid wrap
+use_parentheses = true             # Use parentheses for line continuation
+ensure_newline_before_comments = true  # Add a newline before comments
+combine_as_imports = true          # Combine as imports on the same line
