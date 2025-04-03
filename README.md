@@ -182,3 +182,101 @@ This workshop contains **independent assignments**, each demonstrating a differe
 Each assignment may have **incompatible dependency versions** due to rapidly evolving AI agent libraries.
 
 To avoid conflicts, it is recommended to use a **separate virtual environment for each assignment**.
+
+## Code Formatting
+
+This project uses Black for code formatting and isort for import sorting. The configuration is in `pyproject.toml`.
+
+### VSCode Setup
+1. Install the required extensions:
+   - Black Formatter (ms-python.black-formatter)
+   - Python (ms-python.python)
+
+2. Select the correct Python interpreter:
+   - Open any Python file
+   - Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows)
+   - Type "Python: Select Interpreter"
+   - Choose the interpreter from your current assignment's environment (e.g., `.venv-01/bin/python`)
+
+3. The following settings are already configured in the project:
+   - Format on save is enabled
+   - Black is set as the default formatter
+   - Import sorting is configured to use Google style
+
+### IDE Setup
+
+This project uses standard configuration files to ensure consistent formatting across different IDEs:
+
+- `.editorconfig`: Basic editor settings (works in most IDEs)
+- `pyproject.toml`: Black and isort configuration
+
+#### VSCode
+1. Install extensions:
+   - Black Formatter (ms-python.black-formatter)
+   - Python (ms-python.python)
+   - EditorConfig (editorconfig.editorconfig)
+
+#### PyCharm
+1. Enable EditorConfig:
+   - Settings → Editor → Code Style
+   - Check "Enable EditorConfig support"
+2. Set Black as formatter:
+   - Settings → Tools → Actions on Save
+   - Enable "Reformat code"
+   - Set Python formatter to "Black"
+
+#### Sublime Text
+1. Install packages:
+   - EditorConfig
+   - Python Black
+2. Enable format on save:
+   - Preferences → Package Settings → Python Black → Settings
+   - Add: `"on_save": true`
+
+### Command Line Usage
+To format files from the command line, first activate your virtual environment:
+
+```bash
+source .venv-01/bin/activate  # Replace 01 with your current assignment number
+black your_file.py            # Format a single file
+black .                       # Format all Python files in the project
+isort .                       # Sort imports in all Python files
+```
+
+### Making Changes
+
+1. **Before starting work:**
+   ```bash
+   git pull                   # Get latest changes
+   source .venv-01/bin/activate
+   ```
+
+2. **While working:**
+   - Let your IDE format on save (VSCode, PyCharm)
+   - Or format manually:
+     ```bash
+     black .
+     isort .
+     ```
+
+3. **Before committing:**
+   ```bash
+   # Format all files
+   black .
+   isort .
+   
+   # Review changes
+   git status
+   git diff
+   
+   # Important: Always commit formatting configs together
+   # - .editorconfig: Basic editor settings
+   # - pyproject.toml: Black and isort settings
+   # This ensures all developers use the same formatting
+   
+   # Commit
+   git add .
+   git commit -m "descriptive message"
+   git push
+   ```
+
