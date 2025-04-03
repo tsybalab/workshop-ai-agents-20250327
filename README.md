@@ -1,12 +1,14 @@
 # AI Agents: Workshop @ Hyperskill 2025-03-27
 
 ## Table of Contents
-- Assignment 1: Basic Agent Setup
-- Assignment 2: Multi-Agent Conversation
-- Assignment 3: Specialized Crew Creation
-- Assignment 4: Vector Database with ChromaDB
-- Assignment 5: Browser Use
-- Assignment 6: Voice Assistant with Vapi
+| Assignment | Description                      | Make Target            | Script File         |
+|------------|----------------------------------|------------------------|---------------------|
+| 1          | Basic Agent Setup                | make setup-langgraph   | langgraph.py        |
+| 2          | Multi-Agent Conversation         | make setup-autogen     | autogen.py          |
+| 3          | Specialized Crew Creation        | make setup-crewai      | crewai.py           |
+| 4          | Vector Database with ChromaDB    | make setup-rag         | rag.py              |
+| 5          | Browser Use                      | make setup-browseruse  | browseruse.py       |
+| 6          | Voice Assistant with Vapi        | make setup-voice       | voice.py            |
 
 ## Installation
 
@@ -27,12 +29,12 @@
 
 2. **Setup environment for an assignment:**
    ```bash
-   make setup-01  # Replace 01 with the assignment number
+   make setup-langgraph  # Replace langgraph with the assignment number
    ```
 
 3. **Activate the environment:**
    ```bash
-   source .venv-01/bin/activate  # Replace 01 with the assignment number
+   source .venv-langgraph/bin/activate  # Replace langgraph with the assignment number
    ```
 
 4. **Run the assignment:**
@@ -52,14 +54,14 @@
 
 2. **Create and activate a virtual environment:**
    ```cmd
-   python -m venv .venv-01  # Replace 01 with the assignment number
-   .venv-01\Scripts\activate
+   python -m venv .venv-langgraph  # Replace langgraph with the assignment number
+   .venv-langgraph\Scripts\activate
    ```
 
 3. **Install requirements:**
    ```cmd
    pip install --upgrade pip
-   pip install -r requirements-01.txt  # Replace 01 with the assignment number
+   pip install -r requirements-langgraph.txt  # Replace langgraph with the assignment number
    ```
 
 4. **Run the assignment:**
@@ -67,7 +69,7 @@
 
 5. **Clean environments manually:**
    ```cmd
-   rmdir /s /q .venv-01  # Replace 01 with the assignment number
+   rmdir /s /q .venv-langgraph  # Replace langgraph with the assignment number
    ```
 
 ### Optional: Makefile Alternative for Windows
@@ -75,12 +77,12 @@ Consider creating a `make.bat` file with equivalent commands for easier setup on
 
 ```batch
 @echo off
-:: Usage: make.bat setup-01
-if "%1"=="setup-01" (
-    python -m venv .venv-01
-    .venv-01\Scripts\activate
+:: Usage: make.bat setup-langgraph
+if "%1"=="setup-langgraph" (
+    python -m venv .venv-langgraph
+    .venv-langgraph\Scripts\activate
     pip install --upgrade pip
-    pip install -r requirements-01.txt
+    pip install -r requirements-langgraph.txt
 )
 if "%1"=="clean" (
     rmdir /s /q .venv-*
@@ -91,19 +93,19 @@ if "%1"=="clean" (
 
 ### Setup
 ```bash
-make setup-01  # Create environment for Assignment 1
-source .venv-01/bin/activate
+make setup-langgraph  # Setup for Assignment 1
+source .venv-langgraph/bin/activate
 make dev       # Install development tools (optional)
 ```
 
 Running the Assignment
 
 ```bash
-python 01_langgraph_agent.py  # Assignment 1
+python langgraph.py  # Assignment 1
 deactivate
 ```
 
-## Development & Testing 
+## Development & Testing
 To install development tools, which include `pytest`, use:
 
 ```bash
@@ -171,12 +173,12 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", api_key=GOOGLE_API_K
 ## Usage
 
 ```bash
-python 01_langgraph_agent.py
-python 02_crewai_agent.py
-python 03_crewai_crew.py
-python 04_rag.py
-python 05_browseruse.py
-python 06_voice.py
+python langgraph.py
+python autogen.py
+python crewai.py
+python rag.py
+python browseruse.py
+python voice.py
 ```
 
 ## Notes on Project Structure
@@ -192,7 +194,7 @@ This workshop contains **independent assignments**, each demonstrating a differe
 | 05 | Browser-Use Agent |
 | 06 | Vapi Voice Assistant |
 
-⚠ **Important**:  
+⚠ **Important**:
 Each assignment may have **incompatible dependency versions** due to rapidly evolving AI agent libraries.
 
 To avoid conflicts, it is recommended to use a **separate virtual environment for each assignment**.
@@ -210,7 +212,7 @@ This project uses Black for code formatting and isort for import sorting. The co
    - Open any Python file
    - Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows)
    - Type "Python: Select Interpreter"
-   - Choose the interpreter from your current assignment's environment (e.g., `.venv-01/bin/python`)
+   - Choose the interpreter from your current assignment's environment (e.g., `.venv-langgraph/bin/python`)
 
 3. The following settings are already configured in the project:
    - Format on save is enabled
@@ -251,7 +253,7 @@ This project uses standard configuration files to ensure consistent formatting a
 To format files from the command line, first activate your virtual environment:
 
 ```bash
-source .venv-01/bin/activate  # Replace 01 with your current assignment number
+source .venv-langgraph/bin/activate  # Replace langgraph with your current assignment number
 black your_file.py            # Format a single file
 black .                       # Format all Python files in the project
 isort .                       # Sort imports in all Python files
@@ -262,7 +264,7 @@ isort .                       # Sort imports in all Python files
 1. **Before starting work:**
    ```bash
    git pull                   # Get latest changes
-   source .venv-01/bin/activate
+   source .venv-langgraph/bin/activate
    ```
 
 2. **While working:**
@@ -278,16 +280,16 @@ isort .                       # Sort imports in all Python files
    # Format all files
    black .
    isort .
-   
+
    # Review changes
    git status
    git diff
-   
+
    # Important: Always commit formatting configs together
    # - .editorconfig: Basic editor settings
    # - pyproject.toml: Black and isort settings
    # This ensures all developers use the same formatting
-   
+
    # Commit
    git add .
    git commit -m "descriptive message"
