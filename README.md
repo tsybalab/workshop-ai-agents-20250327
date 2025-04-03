@@ -3,12 +3,12 @@
 ## Table of Contents
 | Assignment | Description                      | Make Target            | Script File         |
 |------------|----------------------------------|------------------------|---------------------|
-| 1          | Basic Agent Setup                | make setup-langgraph   | langgraph.py        |
-| 2          | Multi-Agent Conversation         | make setup-autogen     | autogen.py          |
-| 3          | Specialized Crew Creation        | make setup-crewai      | crewai.py           |
-| 4          | Vector Database with ChromaDB    | make setup-rag         | rag.py              |
-| 5          | Browser Use                      | make setup-browseruse  | browseruse.py       |
-| 6          | Voice Assistant with Vapi        | make setup-voice       | voice.py            |
+| 1          | Basic Agent Setup                | make setup-langgraph   | langgraph_agent.py  |
+| 2          | Multi-Agent Conversation         | make setup-autogen     | autogen_agent.py    |
+| 3          | Specialized Crew Creation        | make setup-crewai      | crewai_agent.py     |
+| 4          | Vector Database with ChromaDB    | make setup-rag         | rag_agent.py        |
+| 5          | Browser Use                      | make setup-browseruse  | browseruse_agent.py |
+| 6          | Voice Assistant with Vapi        | make setup-voice       | voice_agent.py      |
 
 ## Installation
 
@@ -101,7 +101,7 @@ make dev       # Install development tools (optional)
 Running the Assignment
 
 ```bash
-python langgraph.py  # Assignment 1
+python langgraph_agent.py  # Assignment 1
 deactivate
 ```
 
@@ -173,12 +173,12 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", api_key=GOOGLE_API_K
 ## Usage
 
 ```bash
-python langgraph.py
-python autogen.py
-python crewai.py
-python rag.py
-python browseruse.py
-python voice.py
+python langgraph_agent.py
+python autogen_agent.py
+python crewai_agent.py
+python rag_agent.py
+python browseruse_agent.py
+python voice_agent.py
 ```
 
 ## Notes on Project Structure
