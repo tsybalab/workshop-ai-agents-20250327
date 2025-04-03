@@ -1,0 +1,31 @@
+# Black formatter configuration
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html
+[tool.black]
+line-length = 88                     # Default Black line length
+target-version = ["py311"]          # Target Python version
+include = '\.pyi?$'                 # Python files only
+skip-string-normalization = false   # Use double quotes consistently
+skip-magic-trailing-comma = false   # Keep trailing commas
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.venv
+  | env
+  | venv
+  | build
+  | dist
+  | __pycache__
+  | .ipynb_checkpoints
+)/
+'''
+
+# Import sorting configuration
+# https://pycqa.github.io/isort/docs/configuration/options.html
+[tool.isort]
+profile = "google"                  # Use Google import style
+line_length = 88                    # Match Black's line length
+force_single_line = false           # Allow multiple imports on one line
+multi_line_output = 3              # Vertical Hanging Indent
+include_trailing_comma = true       # Include trailing comma in multi-line imports
+force_grid_wrap = 0                 # Don't force grid wrap

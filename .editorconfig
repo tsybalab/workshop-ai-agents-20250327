@@ -1,0 +1,25 @@
+# EditorConfig is supported by most IDEs and editors
+# https://editorconfig.org/
+
+root = true
+
+# Default settings for all files
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# Python and TOML files
+[*.{py,toml}]
+indent_style = space
+indent_size = 4
+
+# Config files
+[*.{json,yml,yaml,md}]
+indent_style = space
+indent_size = 2
+
+# Ignore patterns (should match .gitignore and Black's exclude)
+[{.git/**,venv/**,.venv/**,build/**,dist/**,__pycache__/**,.ipynb_checkpoints/**}]
+ignore = true
