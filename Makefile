@@ -8,33 +8,31 @@
 
 # --- Setup Environments ---
 
-# Generic setup for Assignments 1-4 and 6
+# Generic setup for all assignments (except playwright-based)
 setup-%:
-	@if [ "$*" != "05" ]; then \
-		python3 --version | grep -E "3\.11" >/dev/null || (echo "❌ Python >= 3.11 is required" && exit 1); \
-		python3 -m venv .venv-$* && \
-		echo "Virtual environment .venv-$* created." && \
-		. .venv-$*/bin/activate && \
-		echo "Installing requirements-$*.txt..." && \
-		pip install --upgrade pip && \
-		pip install -r requirements-$*.txt && \
-		echo "✅ Environment .venv-$* is ready." && \
-		echo "To activate: source .venv-$*/bin/activate"; \
-	fi
-
-# Special setup for Assignment 5 (requires Playwright install)
-setup-05:
 	python3 --version | grep -E "3\.11" >/dev/null || (echo "❌ Python >= 3.11 is required" && exit 1)
-	python3 -m venv .venv-05
-	@echo "Virtual environment .venv-05 created."
-	. .venv-05/bin/activate && \
-	echo "Installing requirements-05.txt and Playwright..." && \
+	python3 -m venv .venv-$*
+	@echo "Virtual environment .venv-$* created."
+	. .venv-$*/bin/activate && \
+	echo "Installing requirements-$*.txt..." && \
 	pip install --upgrade pip && \
-	pip install -r requirements-05.txt && \
+	pip install -r requirements-$*.txt && \
+	echo "✅ Environment .venv-$* is ready." && \
+	echo "To activate: source .venv-$*/bin/activate"
+
+# Special setup for browser task (Playwright)
+setup-browseruse:
+	python3 --version | grep -E "3\.11" >/dev/null || (echo "❌ Python >= 3.11 is required" && exit 1)
+	python3 -m venv .venv-browseruse
+	@echo "Virtual environment .venv-browseruse created."
+	. .venv-browseruse/bin/activate && \
+	echo "Installing requirements-browseruse.txt and Playwright..." && \
+	pip install --upgrade pip && \
+	pip install -r requirements-browseruse.txt && \
 	pip install playwright && \
 	python -m playwright install && \
-	echo "✅ Environment .venv-05 (with Playwright) is ready." && \
-	echo "To activate: source .venv-05/bin/activate"
+	echo "✅ Environment .venv-browseruse (with Playwright) is ready." && \
+	echo "To activate: source .venv-browseruse/bin/activate"
 
 # --- Dev ---
 
@@ -61,12 +59,12 @@ help:
 	@echo "⚠ Requires Python >= 3.11"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make setup-01     # Setup environment for Assignment 1"
-	@echo "  make setup-02     # Setup environment for Assignment 2"
-	@echo "  make setup-03     # Setup environment for Assignment 3"
-	@echo "  make setup-04     # Setup environment for Assignment 4"
-	@echo "  make setup-05     # Setup environment for Assignment 5 (includes playwright install)"
-	@echo "  make setup-06     # Setup environment for Assignment 6"
-	@echo "  make dev          # Install development dependencies"
-	@echo "  make clean        # Remove all virtual environments"
+	@echo "  make setup-langgraph     # Setup for LangGraph task"
+	@echo "  make setup-autogen       # Setup for Autogen task"
+	@echo "  make setup-crewai        # Setup for CrewAI task"
+	@echo "  make setup-rag           # Setup for RAG task"
+	@echo "  make setup-browseruse    # Setup for Browser task (Playwright)"
+	@echo "  make setup-voice         # Setup for Voice assistant task"
+	@echo "  make dev                 # Install dev tools into current environment"
+	@echo "  make clean               # Remove all virtual environments"
 	@echo ""
