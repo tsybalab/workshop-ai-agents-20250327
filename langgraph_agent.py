@@ -32,22 +32,29 @@ class AgentState(TypedDict):
 def get_llm():
     """Initialize and return the appropriate LLM based on the provider."""
     llm_provider = os.getenv("LLM_PROVIDER")
+    if not llm_provider:
+        raise ValueError("LLM_PROVIDER environment variable not set")
+
     if llm_provider == "openai":
         api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY environment variable not set")
         return ChatOpenAI(
-            model="gpt-4o-mini",
+            model="gpt-4-turbo-preview",
             api_key=api_key,
             temperature=0.7,
         )
     elif llm_provider == "gemini":
         api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable not set")
         return ChatGoogleGenerativeAI(
             model="gemini-2.0-flash-lite",
             api_key=api_key,
             temperature=0.7,
         )
     else:
-        raise ValueError("Unsupported LLM provider")
+        raise ValueError(f"Unsupported LLM provider: {llm_provider}")
 
 
 def get_user_input(state: AgentState) -> AgentState:
