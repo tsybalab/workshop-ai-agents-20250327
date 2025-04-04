@@ -98,7 +98,6 @@ def test_evaluate_solution_complete_message():
     "provider,expected_model",
     [
         ("openai", "gpt-4o-mini"),
-        ("gemini", "gemini-2.0-flash-lite"),
     ],
 )
 def test_get_config_list(mock_env_vars, provider, expected_model):
@@ -112,9 +111,6 @@ def test_get_config_list(mock_env_vars, provider, expected_model):
 
         if provider == "openai":
             assert config[0]["api_key"] == "test-openai-key"
-        else:  # gemini
-            assert config[0]["api_key"] == "test-google-key"
-            assert config[0]["use_google"] is True
 
 
 def test_get_config_list_missing_provider(mock_env_vars):
@@ -130,7 +126,6 @@ def test_get_config_list_missing_provider(mock_env_vars):
     "provider,env_var",
     [
         ("openai", "OPENAI_API_KEY"),
-        ("gemini", "GOOGLE_API_KEY"),
     ],
 )
 def test_get_config_list_missing_api_key(mock_env_vars, provider, env_var):

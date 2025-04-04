@@ -201,14 +201,14 @@ Let's end here and try a different approach.""",
 
 
 def get_config_list():
-    """Get the LLM configuration based on the provider.
+    """
+    Get the LLM configuration based on the provider.
 
     Returns a list of configuration dictionaries for the specified LLM provider.
     The provider is determined by the LLM_PROVIDER environment variable.
 
     Supported providers:
-    - openai: Requires OPENAI_API_KEY
-    - gemini: Requires GOOGLE_API_KEY
+    - openai: Uses GPT-4o-mini model
 
     Returns:
         List[Dict]: List of configuration dictionaries for the LLM
@@ -228,16 +228,6 @@ def get_config_list():
         config = {
             "model": "gpt-4o-mini",
             "api_key": api_key,
-        }
-        return [config]
-    elif llm_provider == "gemini":
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise ValueError("GOOGLE_API_KEY environment variable not set")
-        config = {
-            "model": "gemini-2.0-flash-lite",
-            "api_key": api_key,
-            "use_google": True,
         }
         return [config]
     else:
