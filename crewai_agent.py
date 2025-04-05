@@ -77,16 +77,18 @@ def execute_crew(topic):
     tasks = define_tasks(researcher, writer, topic)
 
     crew = Crew(agents=[researcher, writer], tasks=tasks, verbose=True)
+    result = crew.kickoff()
+    print("\n\n=== FINAL ARTICLE ===\n\n")
+    print(result)
 
-    try:
-        result = crew.kickoff()
-        print("\n\n=== FINAL ARTICLE ===\n\n")
-        print(result)
-    except KeyboardInterrupt:
-        print("\n\n👋 Exiting gracefully. Bye!")
+
+def main():
+    topic = "The Role of AI in Modern Healthcare"
+    execute_crew(topic)
 
 
 if __name__ == "__main__":
-    # Example topic
-    topic = "The Role of AI in Modern Healthcare"
-    execute_crew(topic)
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Exiting gracefully. Bye!")
