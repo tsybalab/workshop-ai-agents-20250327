@@ -293,32 +293,35 @@ def run_conversation():
     """
     Run the conversation between the user and assistant agents.
     """
-    try:
-        # Set up the agents
-        user, assistant = setup_agents()
+    # Set up the agents
+    user, assistant = setup_agents()
 
-        # Define the initial problem
-        problem = define_user_problem()
+    # Define the initial problem
+    problem = define_user_problem()
 
-        # Start the conversation with the user's problem
-        chat_result = user.initiate_chat(
-            assistant,
-            message=problem,
-            max_turns=10,  # Limit the conversation to 10 turns
-        )
+    # Start the conversation with the user's problem
+    chat_result = user.initiate_chat(
+        assistant,
+        message=problem,
+        max_turns=10,  # Limit the conversation to 10 turns
+    )
 
-        # Print final evaluation summary
-        if isinstance(user, EvaluatingUser) and user.evaluation_history:
-            print("\n=== Final Evaluation Summary ===")
-            best_evaluation = max(user.evaluation_history, key=lambda x: x["score"])
-            print(user.format_evaluation(best_evaluation))
-            print(f"Total turns: {len(user.evaluation_history)}")
+    # Print final evaluation summary
+    if isinstance(user, EvaluatingUser) and user.evaluation_history:
+        print("\n=== Final Evaluation Summary ===")
+        best_evaluation = max(user.evaluation_history, key=lambda x: x["score"])
+        print(user.format_evaluation(best_evaluation))
+        print(f"Total turns: {len(user.evaluation_history)}")
 
-        return chat_result
-    except KeyboardInterrupt:
-        print("\n\n👋 Exiting gracefully. Bye!")
-        return {"status": "interrupted"}
+    return chat_result
+
+
+def main():
+    run_conversation()
 
 
 if __name__ == "__main__":
-    run_conversation()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Exiting gracefully. Bye!")
