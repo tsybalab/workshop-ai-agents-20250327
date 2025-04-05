@@ -6,189 +6,149 @@ Implement an AI agent that uses ChromaDB as a vector database for storing and re
 1. Use PDF or DOCX instead of hardcoded sample_documents
 """
 
+import argparse
 import os
+import sys
 import uuid
-from typing import Any, Dict, List
+from enum import Enum
+from typing import List, Optional
 
 import chromadb
 from chromadb.utils import embedding_functions
+from docx import Document as DocxDocument
 from dotenv import load_dotenv
 from langchain.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
-    MessagesPlaceholder,
     SystemMessagePromptTemplate,
 )
-from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+from pypdf import PdfReader
 
-# Load environment variables
+# === Environment Setup ===
 load_dotenv()
 
 
-class AgentWithChromaDB:
-    def __init__(self, collection_name="documents"):
-        """
-        Initialize the agent with ChromaDB for vector storage and retrieval.
+# === File Type Handling ===
+class FileType(Enum):
+    PDF = "pdf"
+    DOCX = "docx"
 
-        Args:
-            collection_name: Name of the ChromaDB collection to use
-        """
-        # Initialize the LLM
-        self.llm = ChatOpenAI(
-            model="gpt-4o-mini",
-            temperature=0.7,
+
+EXTENSION_MAP = {
+    ".pdf": FileType.PDF,
+    ".docx": FileType.DOCX,
+    ".doc": FileType.DOCX,
+}
+
+
+def get_file_type(file_path: str) -> Optional[FileType]:
+    ext = os.path.splitext(file_path)[1].lower()
+    return EXTENSION_MAP.get(ext)
+
+
+def read_pdf(file_path: str) -> str:
+    reader = PdfReader(file_path)
+    return "\n".join(page.extract_text() or "" for page in reader.pages)
+
+
+def read_docx(file_path: str) -> str:
+    doc = DocxDocument(file_path)
+    return "\n".join(p.text for p in doc.paragraphs)
+
+
+# === LLM Initialization ===
+def get_llm():
+    llm_provider = os.getenv("LLM_PROVIDER")
+    if not llm_provider:
+        raise ValueError("LLM_PROVIDER environment variable not set")
+
+    if llm_provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY not set")
+        return ChatOpenAI(model="gpt-4o-mini", api_key=api_key, temperature=0.7)
+
+    elif llm_provider == "gemini":
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY not set")
+        return ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash", api_key=api_key, temperature=0.7
         )
 
-        # Initialize ChromaDB client
-        self.client = chromadb.Client()
+    else:
+        raise ValueError(f"Unsupported LLM provider: {llm_provider}")
 
-        # Set up the embedding function
+
+# === Vector Agent ===
+class AgentWithChromaDB:
+    def __init__(self, collection_name="documents"):
+        self.llm = get_llm()
+        self.client = chromadb.Client()
         self.embedding_function = embedding_functions.OpenAIEmbeddingFunction(
             api_key=os.getenv("OPENAI_API_KEY"), model_name="text-embedding-3-small"
         )
-
-        # Create or get the collection
         self.collection = self._get_or_create_collection(collection_name)
-
-        # Initialize the text splitter for chunking documents
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len,
+            chunk_size=1000, chunk_overlap=200
         )
 
-    def _get_or_create_collection(self, collection_name):
-        """
-        Get an existing collection or create a new one if it doesn't exist.
-        """
+    def _get_or_create_collection(self, name):
         try:
-            # Try to get an existing collection
-            collection = self.client.get_collection(
-                name=collection_name, embedding_function=self.embedding_function
+            return self.client.get_collection(
+                name=name, embedding_function=self.embedding_function
             )
-            print(f"Using existing collection: {collection_name}")
-        except:
-            # Create a new collection if it doesn't exist
-            collection = self.client.create_collection(
-                name=collection_name, embedding_function=self.embedding_function
+        except Exception as e:
+            if "does not exist" in str(e):
+                print(f"Collection '{name}' does not exist. Creating a new one.")
+            else:
+                print(f"Error retrieving collection '{name}': {e}")
+            return self.client.create_collection(
+                name=name, embedding_function=self.embedding_function
             )
-            print(f"Created new collection: {collection_name}")
 
-        return collection
-
-    def ingest_document(self, document_text, metadata=None):
-        """
-        Ingest a document into the vector database.
-
-        Args:
-            document_text: The text content of the document
-            metadata: Optional metadata for the document
-
-        Returns:
-            List of document IDs for the ingested chunks
-        """
-        if metadata is None:
-            metadata = {}
-
-        # Split the document into chunks
-        chunks = self.text_splitter.split_text(document_text)
-
-        # Generate unique IDs for each chunk
-        doc_ids = [str(uuid.uuid4()) for _ in range(len(chunks))]
-
-        # Prepare metadata for each chunk
+    def ingest_document(self, content: str, metadata: dict = None):
+        metadata = metadata or {}
+        chunks = self.text_splitter.split_text(content)
+        ids = [str(uuid.uuid4()) for _ in chunks]
         metadatas = [
             {**metadata, "chunk": i, "total_chunks": len(chunks)}
             for i in range(len(chunks))
         ]
-
-        # Add the chunks to the collection
-        self.collection.add(documents=chunks, ids=doc_ids, metadatas=metadatas)
-
-        print(f"Ingested document with {len(chunks)} chunks")
-        return doc_ids
+        self.collection.add(documents=chunks, ids=ids, metadatas=metadatas)
+        print(f"Ingested {len(chunks)} chunks from: {metadata.get('filename')}")
 
     def search_documents(self, query, n_results=3):
-        """
-        Search for relevant document chunks based on a query.
-
-        Args:
-            query: The search query
-            n_results: Number of results to return
-
-        Returns:
-            List of relevant document chunks with their metadata
-        """
-        # Perform similarity search
         results = self.collection.query(query_texts=[query], n_results=n_results)
-
-        # Format the results
         documents = []
-        if results and results["documents"] and results["documents"][0]:
-            for i, doc_text in enumerate(results["documents"][0]):
-                documents.append(
-                    {
-                        "text": doc_text,
-                        "metadata": (
-                            results["metadatas"][0][i]
-                            if results["metadatas"] and results["metadatas"][0]
-                            else {}
-                        ),
-                        "id": (
-                            results["ids"][0][i]
-                            if results["ids"] and results["ids"][0]
-                            else None
-                        ),
-                        "distance": (
-                            results["distances"][0][i]
-                            if results["distances"] and results["distances"][0]
-                            else None
-                        ),
-                    }
-                )
-
+        for i, text in enumerate(results.get("documents", [[]])[0]):
+            documents.append(
+                {
+                    "text": text,
+                    "metadata": results["metadatas"][0][i],
+                    "id": results["ids"][0][i],
+                    "distance": results["distances"][0][i],
+                }
+            )
         return documents
 
     def answer_question(self, question):
-        """
-        Answer a question using information retrieved from the vector database.
+        docs = self.search_documents(question)
+        if not docs:
+            return "No information available to answer your question."
 
-        Args:
-            question: The user's question
+        context = "\n\n".join(
+            f"Document {i+1} ({', '.join(f'{k}: {v}' for k, v in doc['metadata'].items() if k not in ['chunk', 'total_chunks'])}):\n{doc['text']}"
+            for i, doc in enumerate(docs)
+        )
 
-        Returns:
-            The agent's response to the question
-        """
-        # Search for relevant documents
-        relevant_docs = self.search_documents(question)
-
-        if not relevant_docs:
-            return "I don't have enough information to answer that question."
-
-        # Create a context from the relevant documents
-        context_parts = []
-        for i, doc in enumerate(relevant_docs):
-            # Add document text with metadata information
-            metadata_str = ", ".join(
-                [
-                    f"{k}: {v}"
-                    for k, v in doc["metadata"].items()
-                    if k != "chunk" and k != "total_chunks"
-                ]
-            )
-            context_parts.append(f"Document {i+1} ({metadata_str}):\n{doc['text']}")
-
-        context = "\n\n".join(context_parts)
-
-        # Create a prompt template
         prompt = ChatPromptTemplate.from_messages(
             [
                 SystemMessagePromptTemplate.from_template(
-                    "You are a helpful assistant that answers questions based on the provided context. "
-                    "If the answer cannot be found in the context, acknowledge that you don't know. "
-                    "Cite the specific documents you used to formulate your answer."
+                    "You are a helpful assistant. Use the provided context to answer the question. If unknown, say so."
                 ),
                 HumanMessagePromptTemplate.from_template(
                     f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"
@@ -196,70 +156,62 @@ class AgentWithChromaDB:
             ]
         )
 
-        # Generate the answer
-        response = self.llm.invoke(prompt.format_messages())
+        return self.llm.invoke(prompt.format_messages()).content
 
-        return response.content
+
+# === CLI Execution ===
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="📄 Ingest PDF and DOCX files into ChromaDB for semantic search using an AI agent.",
+        epilog="💡 Example: python agent_with_chromadb.py document.pdf report.docx",
+    )
+
+    parser.add_argument(
+        "file_paths", nargs="*", help="Path(s) to .pdf, .docx or .doc file(s) to ingest"
+    )
+    args = parser.parse_args()
+
+    # If no file paths are provided, print help and exit
+    if not args.file_paths:
+        parser.print_help()
+        print("\nℹ️  Please provide at least one file to ingest.")
+        sys.exit(0)
+
+    return args
 
 
 def main():
-    # Create the agent with ChromaDB
+    args = parse_arguments()
     agent = AgentWithChromaDB()
 
-    # Sample documents to ingest
-    sample_documents = [
-        {
-            "text": """
-            Python is a high-level, interpreted programming language known for its readability and versatility.
-            It was created by Guido van Rossum and first released in 1991. Python supports multiple programming
-            paradigms, including procedural, object-oriented, and functional programming. It has a comprehensive
-            standard library and a large ecosystem of third-party packages.
-            """,
-            "metadata": {
-                "title": "Python Programming Language",
-                "category": "Programming",
-            },
-        },
-        {
-            "text": """
-            Machine learning is a subset of artificial intelligence that focuses on developing systems that can
-            learn from and make decisions based on data. Common machine learning techniques include supervised
-            learning, unsupervised learning, and reinforcement learning. Popular machine learning libraries in
-            Python include TensorFlow, PyTorch, and scikit-learn.
-            """,
-            "metadata": {"title": "Machine Learning Basics", "category": "AI"},
-        },
-        {
-            "text": """
-            Vector databases store data as high-dimensional vectors and enable efficient similarity search.
-            They are particularly useful for applications involving natural language processing, image recognition,
-            and recommendation systems. ChromaDB is an open-source vector database that provides simple APIs for
-            storing and retrieving vectors, making it ideal for building AI applications.
-            """,
-            "metadata": {"title": "Vector Databases", "category": "Databases"},
-        },
-    ]
+    for path in args.file_paths:
+        if not os.path.exists(path):
+            print(f"❌ File not found: {path}")
+            continue
+        file_type = get_file_type(path)
+        if file_type == FileType.PDF:
+            text = read_pdf(path)
+        elif file_type == FileType.DOCX:
+            text = read_docx(path)
+        else:
+            print(f"⚠️ Unsupported file type: {path}")
+            continue
 
-    print("Ingesting sample documents...")
-    for doc in sample_documents:
-        agent.ingest_document(doc["text"], doc["metadata"])
+        agent.ingest_document(
+            text, {"filename": os.path.basename(path), "type": file_type.value}
+        )
 
-    print("Agent with ChromaDB is ready. Type 'exit' to quit.")
-    print("Ask questions about the ingested documents.")
+    print("\n✅ Agent is ready. Type a question or 'exit' to quit.")
 
     while True:
-        # Get user input
-        user_input = input("\nYou: ")
-
-        if user_input.lower() == "exit":
+        query = input("\nYou: ")
+        if query.lower() == "exit":
             break
-
-        # Process the input and get a response
-        response = agent.answer_question(user_input)
-
-        # Print the agent's response
-        print(f"\nAgent: {response}")
+        print(f"\nAgent: {agent.answer_question(query)}")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Exiting gracefully. Bye!")
