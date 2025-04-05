@@ -163,13 +163,12 @@ def main() -> AgentState:
     agent = create_agent_graph(topic)
     print(f"Agent specialized in {topic} is ready. Type 'exit' to quit.")
     state = AgentState(messages=[], topic=topic, user_input="", search_results="")
-    try:
-        final_state = agent.invoke(state)
-        return final_state
-    except KeyboardInterrupt:
-        print("\n\n👋 Exiting gracefully. Bye!")
-        return state
+    final_state = agent.invoke(state)
+    return final_state
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Exiting gracefully. Bye!")
