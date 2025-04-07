@@ -1,10 +1,10 @@
-"""Assignment 2: Multi-Agent Conversation
+"""
+Assignment 2: Multi-Agent Conversation
 Implement a system with two AI agents using AutoGen that can have a conversation to solve a problem.
 
-Features:
-1. Automatic conversation termination when a solution is found
-2. Solution evaluation based on specific criteria
-3. Detailed feedback on proposed solutions
+TODO:
+1. Make agents stop after solving the problem
+2. Add evaluation of the assistant's solutions
 """
 
 import os
