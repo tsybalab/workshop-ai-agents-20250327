@@ -1,0 +1,8 @@
+# Minimal development requirements
+
+# Formatters
+black>=24.3.0
+isort>=5.13.0
+
+# Testing
+pytest>=8.0.0

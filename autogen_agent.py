@@ -8,12 +8,14 @@ TODO:
 """
 
 import os
-from dotenv import load_dotenv
+
 import autogen
-from autogen import Agent, ConversableAgent, UserProxyAgent, AssistantAgent
+from autogen import Agent, AssistantAgent, ConversableAgent, UserProxyAgent
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+
 
 def setup_agents():
     """
@@ -26,14 +28,14 @@ def setup_agents():
             "api_key": os.getenv("OPENAI_API_KEY"),
         }
     ]
-    
+
     # Create the assistant agent
     assistant = AssistantAgent(
         name="Assistant",
         llm_config={"config_list": config_list},
         system_message="You are a helpful AI assistant. Your goal is to solve the user's problem by asking clarifying questions and providing solutions.",
     )
-    
+
     # Create the user agent with a specific problem
     user = UserProxyAgent(
         name="User",
@@ -42,8 +44,9 @@ def setup_agents():
         system_message="You are a user with a specific problem. Provide details about your problem when asked and evaluate the assistant's solutions.",
         code_execution_config=False,  # Disable code execution for this agent
     )
-    
+
     return user, assistant
+
 
 def define_user_problem():
     """
@@ -51,12 +54,13 @@ def define_user_problem():
     """
     # Define a specific problem for the user agent
     problem = """
-    I'm trying to build a data visualization dashboard for my company's sales data, 
-    but I'm having trouble deciding which visualization library to use in Python. 
+    I'm trying to build a data visualization dashboard for my company's sales data,
+    but I'm having trouble deciding which visualization library to use in Python.
     I need something that's easy to use but also powerful enough for interactive visualizations.
     """
-    
+
     return problem
+
 
 def run_conversation():
     """
@@ -64,16 +68,15 @@ def run_conversation():
     """
     # Set up the agents
     user, assistant = setup_agents()
-    
+
     # Define the initial problem
     problem = define_user_problem()
-    
+
     # Start the conversation with the user's problem
     user.initiate_chat(
-        assistant,
-        message=problem,
-        max_turns=10  # Limit the conversation to 10 turns
+        assistant, message=problem, max_turns=10  # Limit the conversation to 10 turns
     )
+
 
 if __name__ == "__main__":
     run_conversation()

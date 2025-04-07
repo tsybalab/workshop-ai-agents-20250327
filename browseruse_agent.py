@@ -1,15 +1,16 @@
 """
 Assignment 5: Browser Use
 
-TODO: 
+TODO:
 1. Implement your example
 """
 
-import os
 import asyncio
-from langchain_openai import ChatOpenAI
+import os
+
 from browser_use import Agent
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 
 # Load environment variables
 load_dotenv()
@@ -17,6 +18,7 @@ load_dotenv()
 # Initialize our LLM
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(model="gpt-4o-mini", api_key=OPENAI_API_KEY, temperature=0)
+
 
 # Example 1: Get information from a website
 async def example_1():
@@ -28,6 +30,7 @@ async def example_1():
     await agent.run()
     print("Task completed!")
 
+
 # Example 2: Compare information from two websites
 async def example_2():
     print("\nExample 2: Compare Python versions")
@@ -37,6 +40,7 @@ async def example_2():
     )
     await agent.run()
     print("Task completed!")
+
 
 # Example 3: Extract links and navigate
 async def example_3():
@@ -48,15 +52,17 @@ async def example_3():
     await agent.run()
     print("Task completed!")
 
+
 async def main():
     print("Browser-Use Agent Demo")
     print("======================")
-    
+
     # await example_1()
     # await example_2()
     await example_3()
-    
+
     print("\nDemo completed!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
