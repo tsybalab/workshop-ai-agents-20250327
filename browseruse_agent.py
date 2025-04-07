@@ -92,10 +92,10 @@ async def example_3():
     print("Task completed!")
 
 
-# Example 4: Search specific medical AI topic on DuckDuckGo
+# Example 4: Search specific medical AI topic on National Institutes of Health
 async def example_4():
     print(
-        "\nExample 4: Explore AI impact on medical diagnostic accuracy via DuckDuckGo"
+        "\nExample 4: Explore AI impact on medical diagnostic accuracy via National Institutes of Health"
     )
     agent = Agent(
         task=(
