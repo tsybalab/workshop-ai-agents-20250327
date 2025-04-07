@@ -13,41 +13,59 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Your Vapi API Authorization token (API private key)
-auth_token = os.getenv("VAPI_API_KEY")
-# The Phone Number ID, and the Customer details for the call
-phone_number_id = os.getenv("VAPI_PHONE_NUMBER_ID")
-customer_number = os.getenv("VAPI_CUSTOMER_NUMBER")
 
-# Create the header with Authorization token
-headers = {
-    "Authorization": f"Bearer {auth_token}",
-    "Content-Type": "application/json",
-}
-# Create the data payload for the API request
-data = {
-    "assistant": {
-        "firstMessage": "Hey, what's up? Are you trying to learn AI agents today? Ask me anything!",
-        "model": {
-            "provider": "openai",
-            "model": "gpt-4o-mini",
-            "messages": [{"role": "system", "content": "You are an assistant."}],
+def main():
+    auth_token = os.getenv("VAPI_API_KEY")
+    phone_number_id = os.getenv("VAPI_PHONE_NUMBER_ID")
+    customer_number = os.getenv("VAPI_CUSTOMER_NUMBER")
+    provider = os.getenv("LLM_PROVIDER")
+    model = os.getenv("LLM_MODEL")
+
+    headers = {
+        "Authorization": f"Bearer {auth_token}",
+        "Content-Type": "application/json",
+    }
+
+    data = {
+        "assistant": {
+            "firstMessage": "Hi there! I'm a virtual assistant exploring how AI is changing the way we diagnose illnesses. Can I share something interesting with you?",
+            "model": {
+                "provider": provider,
+                "model": model,
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a curious and engaging virtual assistant calling in English. Your role is to start a light conversation about how artificial intelligence "
+                            "is being used in modern medicine to support diagnostics. Begin by asking if the person has ever heard of AI helping doctors detect diseases like cancer or heart conditions. "
+                            "Mention that AI can analyze scans, lab results, and even symptoms faster than ever. Share a quick example like 'AI tools can now detect early signs of lung cancer from X-rays with very high accuracy.' "
+                            "Keep the conversation open and engaging—encourage the person to ask questions or share their opinion. If they’re interested, you can explain how AI is used ethically to assist—not replace—doctors."
+                        ),
+                    }
+                ],
+            },
+            "voice": "echo-openai",
         },
-        "voice": "jennifer-playht",
-    },
-    "phoneNumberId": phone_number_id,
-    "customer": {
-        "number": customer_number,
-    },
-}
+        "phoneNumberId": phone_number_id,
+        "customer": {
+            "number": customer_number,
+        },
+    }
 
-# Make the POST request to Vapi to create the phone call
-response = requests.post("https://api.vapi.ai/call/phone", headers=headers, json=data)
+    print("📞 Initiating call...")
+    response = requests.post(
+        "https://api.vapi.ai/call/phone", headers=headers, json=data
+    )
 
-# Check if the request was successful and print the response
-if response.status_code == 201:
-    print("Call created successfully")
-    print(response.json())
-else:
-    print("Failed to create call")
-    print(response.text)
+    if response.status_code == 201:
+        print("✅ Call created successfully.")
+    else:
+        print("❌ Failed to create call")
+        print(response.text)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Exiting gracefully. Bye!")
