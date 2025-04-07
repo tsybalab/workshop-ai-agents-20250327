@@ -1,2 +1,4 @@
-    python-dotenv>=1.0.0
-    autogen>=0.2.19
+python-dotenv>=1.0.0
+ag2[openai]>=0.0.1
+ag2[google]>=0.0.1
+autogen>=0.2.19
