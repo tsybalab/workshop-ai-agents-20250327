@@ -1,14 +1,14 @@
 # AI Agents: Workshop @ Hyperskill 2025-03-27
 
 ## Table of Contents
-| Assignment | Description                      | Make Target            | Script File         |
-|------------|----------------------------------|------------------------|---------------------|
-| 1          | Basic Agent Setup                | make setup-langgraph   | langgraph_agent.py  |
-| 2          | Multi-Agent Conversation         | make setup-autogen     | autogen_agent.py    |
-| 3          | Specialized Crew Creation        | make setup-crewai      | crewai_agent.py     |
-| 4          | Vector Database with ChromaDB    | make setup-rag         | rag_agent.py        |
-| 5          | Browser Use                      | make setup-browseruse  | browseruse_agent.py |
-| 6          | Voice Assistant with Vapi        | make setup-voice       | voice_agent.py      |
+| Assignment | Description                      | Make Target            | Script File                   |
+|------------|----------------------------------|------------------------|-------------------------------|
+| 1          | Basic Agent Setup                | make setup-langgraph   | langgraph/langgraph_agent.py  |
+| 2          | Multi-Agent Conversation         | make setup-autogen     | autogen/autogen_agent.py      |
+| 3          | Specialized Crew Creation        | make setup-crewai      | crewai/crewai_agent.py        |
+| 4          | Vector Database with ChromaDB    | make setup-rag         | rag/rag_agent.py              |
+| 5          | Browser Use                      | make setup-browseruse  | browseruse/browseruse_agent.py|
+| 6          | Voice Assistant with Vapi        | make setup-voice       | voice/voice_agent.py          |
 
 ## Installation
 
@@ -61,7 +61,7 @@
 3. **Install requirements:**
    ```cmd
    pip install --upgrade pip
-   pip install -r requirements-langgraph.txt  # Replace langgraph with the assignment number
+   pip install -r langgraph/requirements.txt # Replace langgraph with the assignment number
    ```
 
 4. **Run the assignment:**
@@ -101,7 +101,7 @@ make dev       # Install development tools (optional)
 Running the Assignment
 
 ```bash
-python langgraph_agent.py  # Assignment 1
+python langgraph/langgraph_agent.py  # Assignment 1
 deactivate
 ```
 
@@ -173,12 +173,12 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", api_key=GOOGLE_API_K
 ## Usage
 
 ```bash
-python langgraph_agent.py
-python autogen_agent.py
-python crewai_agent.py
-python rag_agent.py
-python browseruse_agent.py
-python voice_agent.py
+python langgraph/langgraph_agent.py
+python autogen/autogen_agent.py
+python crewai/crewai_agent.py
+python rag/rag_agent.py
+python browseruse/browseruse_agent.py
+python voice/voice_agent.py
 ```
 
 ## Notes on Project Structure
@@ -253,10 +253,10 @@ This project uses standard configuration files to ensure consistent formatting a
 To format files from the command line, first activate your virtual environment:
 
 ```bash
-source .venv-langgraph/bin/activate  # Replace langgraph with your current assignment number
-black your_file.py            # Format a single file
-black .                       # Format all Python files in the project
-isort .                       # Sort imports in all Python files
+source .venv-langgraph/bin/activate   # Match the assignment folder name (e.g., autogen, rag, etc.)
+black your_file.py                    # Format a single file
+black .                               # Format all Python files in the project
+isort .                               # Sort imports in all Python files
 ```
 
 ### Making Changes
