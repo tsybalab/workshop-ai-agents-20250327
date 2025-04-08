@@ -2,9 +2,9 @@ import os
 from unittest.mock import MagicMock, patch
 
 import pytest
-from autogen import AssistantAgent, ConversableAgent, UserProxyAgent
-
 from autogen_agent import EvaluatingUser, get_config_list, setup_agents
+
+from autogen import AssistantAgent, ConversableAgent, UserProxyAgent
 
 
 @pytest.fixture

@@ -5,7 +5,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from langchain_core.messages import AIMessage
-
 from langgraph_agent import (
     AgentState,
     check_continue,
